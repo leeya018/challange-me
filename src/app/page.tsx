@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadChallenges, saveChallenges } from "@/lib/storage";
 import type { Challenge } from "@/types.ts";
-import { ChallengeForm } from "@/components/ChallengeForm.tsx";
-import { ChallengeItem } from "@/components/ChallengeItem.tsx";
-import { ConfirmModal } from "@/components/ConfirmModal.tsx";
+import { ChallengeForm } from "@/components/ChallengeForm";
+import { ChallengeItem } from "@/components/ChallengeItem";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 export default function HomePage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
