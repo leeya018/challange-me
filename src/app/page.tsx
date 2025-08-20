@@ -10,6 +10,7 @@ import { ConfirmModal } from "@/components/ConfirmModal.tsx";
 export default function HomePage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [showForm, setShowForm] = useState(false); // 👈 toggle add-form
 
   // initial load from localStorage (client only)
   useEffect(() => {
@@ -23,6 +24,8 @@ export default function HomePage() {
 
   function addChallenge(ch: Challenge) {
     setChallenges((prev) => [ch, ...prev]);
+    // optional: collapse the form after adding
+    setShowForm(false);
   }
 
   function removeChallenge(id: string) {
@@ -58,16 +61,33 @@ export default function HomePage() {
     <div className="mx-auto max-w-3xl p-6 grid gap-6">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Challenges</h1>
-        <button
-          onClick={() => setShowClearModal(true)}
-          className="px-3 py-2 rounded border text-sm"
-          disabled={challenges.length === 0}
-        >
-          Clear all
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowForm((v) => !v)}
+            aria-expanded={showForm}
+            aria-controls="add-challenge-panel"
+            className="px-3 py-2 rounded border text-sm"
+          >
+            {showForm ? "Hide add form" : "Add new challenge"}
+          </button>
+          <button
+            onClick={() => setShowClearModal(true)}
+            className="px-3 py-2 rounded border text-sm"
+            disabled={challenges.length === 0}
+          >
+            Clear all
+          </button>
+        </div>
       </header>
 
-      <ChallengeForm onAdd={addChallenge} />
+      {/* Collapsible add form */}
+      <section
+        id="add-challenge-panel"
+        hidden={!showForm}
+        className="grid gap-3"
+      >
+        {showForm && <ChallengeForm onAdd={addChallenge} />}
+      </section>
 
       <section className="grid gap-3">
         <div className="text-sm opacity-70">
@@ -76,7 +96,7 @@ export default function HomePage() {
 
         {challenges.length === 0 ? (
           <div className="text-sm opacity-70 border rounded p-4">
-            No challenges yet. Add your first one above.
+            No challenges yet. Click “Add new challenge” to create one.
           </div>
         ) : (
           <ul className="grid gap-3">
